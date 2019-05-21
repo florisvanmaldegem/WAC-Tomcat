@@ -1,0 +1,22 @@
+body{
+    margin:10px;
+    padding:0;
+}
+
+main {
+    padding: 5px;
+    display: grid;
+    background-color: lightblue;
+    grid-template-columns: 50px 50px 50px 50px;
+    grid-template-rows: 30px 50px 50px 50px 50px;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    width: 215px;
+}
+
+#screen {
+    display: inline-grid;
+    grid-column: span 4;
+    text-align: right;
+    font-weight: 1000;
+}
