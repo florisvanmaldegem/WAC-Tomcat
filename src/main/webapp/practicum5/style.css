@@ -49,3 +49,23 @@ body{
 }
 
 /* ------------------------------ */
+
+/* TABLE */
+table{
+    margin: 0;
+    padding: 0;
+}
+
+th{
+    text-align: left;
+    padding: 0 10px;
+}
+
+td {
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+tr:hover > td{
+    color: rgb(150, 143, 143);
+}

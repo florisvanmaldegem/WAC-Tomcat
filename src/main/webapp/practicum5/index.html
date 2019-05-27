@@ -7,25 +7,30 @@
     <title>Weather info</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" media="only screen and (min-width: 750px)" href="wide.css">
 </head>
 <body>
     <div id="frame">
         <div class="infoPanel" id="locationFrame">
-            <div class="infoHeader"><h1>Mijn locatie</h1></div>
+            <div style="cursor: pointer;" class="infoHeader"><h1>Mijn locatie</h1></div>
             <section>
                 <div id="locationInfo" class="pair"></div>
             </section>
         </div>
         <div class="infoPanel" id="weatherFrame">
-            <div class="infoHeader"><h1>Mijn locatie</h1></div>
+            <div class="infoHeader"><h1>Het weer in <span id="weatherIn"></span></h1></div>
             <section>
                 <div id="weatherInfo" class="pair"></div>
             </section>
         </div>
             
         <div class="infoPanel" id="countryList">
-            <div class="infoHeader"><h1>Mijn locatie</h1></div>
-            <section></section>
+            <div class="infoHeader"><h1>Beschikbare vakantiebestemmingen</h1></div>
+            <section style="overflow-x: auto">
+                <table>
+                    <tr><th>Land</th><th>Hoofdstad</th><th>Regio</th><th>Oppervlakte</th><th>Inwoners</th></tr>
+                </table>
+            </section>
         </div> 
     </div>
     <script src="script.js"></script>
