@@ -37,7 +37,7 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 		List<Country> countries = null;
 		try (Connection conn = super.getConection()){
 			
-			String query = "SELECT * FROM public.country";
+			String query = "SELECT * FROM public.country ORDER BY name DESC";
 			
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery(query);
@@ -60,7 +60,15 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 			preparedStatement.setString(1, codeq);
 			ResultSet result = preparedStatement.executeQuery();
 			
-			country = this.orderResult(result).get(0);
+			List<Country> countrys = this.orderResult(result);
+			if(countrys.isEmpty()) {
+				return null;
+			}else {
+				for(Country c : countrys) {
+					country = c;
+				}
+				
+			}
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -108,10 +116,10 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 	}
 	
 	public boolean update(Country country) {
-		boolean success = false;
 		
+		int success = -1;
 		try (Connection conn = super.getConection()) {
-			String query = "UPDATE TABLE public.country "
+			String query = "UPDATE public.country"
 					+ " SET iso3 = ?,"
 					+ " capital = ?,"
 					+ " continent = ?,"
@@ -120,7 +128,6 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 					+ " population = ?,"
 					+ " governmentform = ?"
 					+ " WHERE code = ?";
-			
 			PreparedStatement preparedStatement = conn.prepareStatement(query);
 			
 			preparedStatement.setString(8, country.getCode());
@@ -133,16 +140,18 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 			preparedStatement.setInt(6, country.getPopulation());
 			preparedStatement.setString(7, country.getGovernment());
 		
-			success = preparedStatement.execute();
-			
+			success = preparedStatement.executeUpdate();
+			System.out.println("Succes with: " + success);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		
+			return false;
 		}
-		return success;
+		return true;
 	}
 	
 	public boolean delete(Country country) {
-		boolean success = false;
+		int success = -1;
 		
 		try (Connection conn = super.getConection()) {
 			String query = "DELETE FROM public.country"
@@ -152,15 +161,15 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 			
 			preparedStatement.setString(1, country.getCode());
 			
-			success = preparedStatement.execute();
+			success = preparedStatement.executeUpdate();
+			System.out.println("Succes with: " + success);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return success;
+		return true;
 	}
 	
 	public boolean save(Country country) {
-		boolean success = false;
 		
 		try (Connection conn = super.getConection()) {
 			String query = "INSERT INTO public.country (code,"
@@ -183,12 +192,13 @@ public class CountryPostgresDaoImpl extends PostgresBaseDao implements CountryDa
 			preparedStatement.setDouble(11, country.getLongitude());
 			
 			
-			success = preparedStatement.execute();
+			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return success;
+		return true;
 	}
 	
 }

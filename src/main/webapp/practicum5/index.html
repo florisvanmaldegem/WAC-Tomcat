@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather info</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" media="only screen and (min-width: 750px)" href="wide.css">
+    <link rel="stylesheet" href="src/style/style.css">
+    <link rel="stylesheet" media="only screen and (min-width: 750px)" href="src/style/wide.css">
 </head>
 <body>
     <div id="frame">
@@ -25,14 +25,72 @@
         </div>
             
         <div class="infoPanel" id="countryList">
-            <div class="infoHeader"><h1>Beschikbare vakantiebestemmingen</h1></div>
+            <div class="infoHeader">
+	            <h1>Beschikbare vakantiebestemmingen</h1>
+	            <button style="margin: auto; cursor: pointer;" id=addNew>Voeg toe</button>
+            </div>
             <section style="overflow-x: auto">
                 <table>
                     <tr><th>Land</th><th>Hoofdstad</th><th>Regio</th><th>Oppervlakte</th><th>Inwoners</th></tr>
                 </table>
             </section>
-        </div> 
+        </div>
+        <div id="newCountry" class="hidden">
+        <div class="toolbar">
+        	<h1>Voeg toe</h1>
+        	<button style="height: 2em; width: 2em; margin: auto 1px auto auto; color: red;" id="closeNewCountry">X</button>
+        </div>
+    	<form method="POST" action="../restservices/countries/" id="newCountryForm">
+    		<div class="inputGroup">
+    			<label for="countryCode">Land code: </label>
+    			<input id="countryCode" name="countryCode">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="iso3">ISO-3: </label>
+    			<input id="iso3" name="iso3">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="name">Naam: </label>
+    			<input id="name" name="name">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="continent">Continent: </label>
+    			<input id="continent" name="continent">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="region">Regio: </label>
+    			<input id="region" name="region">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="capital">Hoofdstad: </label>
+    			<input id="capital" name="capital">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="surface">Oppervlakte: </label>
+    			<input id="surface" name="surface">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="population">Inwoners: </label>
+    			<input id="population" name="population">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="government">Government: </label>
+    			<input id="government" name="government">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="lat">Latitude: </label>
+    			<input id="lat" name="lat">
+    		</div>
+    		<div class="inputGroup">
+    			<label for="lon">Longitude: </label>
+    			<input id="lon" name="lon">
+    		</div>
+    		
+    		<input type="submit" value="voeg toe">
+    	</form>
+    </div> 
     </div>
-    <script src="script.js"></script>
+    
+    <script src="src/script/script.js"></script>
 </body>
 </html>

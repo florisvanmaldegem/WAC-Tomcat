@@ -19,6 +19,18 @@ function init(e){
     }
     getIpInfo();
     requestCountries();
+    document.querySelector("#addNew").addEventListener("click", function(e){
+		addNewSpawner(e);
+	});
+	
+    document.querySelector("#newCountryForm").addEventListener("submit", function(e){
+    	e.preventDefault();
+        addNewCountry();
+    });
+    
+    document.querySelector("#closeNewCountry").addEventListener("click", function(e){
+    	hideNewSpawner(e);
+    });
 }
 
 function getIpInfo(){
@@ -125,15 +137,20 @@ function formatWeatherData(data){
 function requestCountries(){
     const url = "../restservices/countries";
     fetch(url)
-    .then(response => response.json())
-    .then(responseCountries)
+    .then(response => Promise.all([response.status, response.json()]))
+    .then(function([status, data]){
+        if(status==200){
+            responseCountries(data);
+        }else{
+            console.log(data.error);
+        }
+    })
     .catch(function(error){
         console.log(error);
     });
 }
 
 function responseCountries(data){
-    data.sort((a, b) => a.name.localeCompare(b.name));
     for(country of data){
         addCountryToTable(country);
     }
@@ -144,7 +161,7 @@ function addCountryToTable(country){
 
     let tr = document.createElement("tr");
     tr.addEventListener("click", function(){
-        requestWeather(country.lat, country.lon, country.capital, country.code);
+        requestWeather(country.latitude, country.longitude, country.capital, country.code);
     });
     
     let eName = document.createElement("td");
@@ -172,5 +189,139 @@ function addCountryToTable(country){
     ePopulation.appendChild(tPopulation);
     tr.appendChild(ePopulation);
 
+    let eEdit = document.createElement("td");
+    let butEdit = document.createElement("button");
+    butEdit.addEventListener("click", function(e){
+        makeRowEditable(country.code, tr);
+    });
+    butEdit.classList.add("edit");
+    eEdit.appendChild(butEdit);
+    tr.appendChild(eEdit);
+
+    let eRem = document.createElement("td");
+    let butRem = document.createElement("button");
+    butRem.addEventListener("click", function(){
+        console.log(country.code);
+        let success = deleteCountry(country.code, tr)
+    });
+    butRem.classList.add("remove");
+    eRem.appendChild(butRem);
+    tr.appendChild(eRem);
+
     table.appendChild(tr);
+}
+
+function deleteCountry(code, tableRow){
+    const url = "../restservices/countries/"+code;
+    fetch(url, {method: 'DELETE', headers: {
+    	"Authorization": "Bearer " + window.sessionStorage.getItem("token")
+    }})
+    .then(function(response){
+        if(response.ok){
+            console.log("Country deleted");
+            tableRow.remove();
+        }else if(response.status===403){
+        	throw new Error("Unauthorized user");
+        }else{
+            console.log(response.json().error);
+        }
+    }).catch(error => console.error(error))
+}
+
+function makeRowEditable(code, tableRow){
+    for(let i = 0; i < 5; i++){
+        let value = tableRow.children[i].innerText;
+        let input = document.createElement("input");
+        input.value = value;
+        tableRow.children[i].innerHTML = "";
+        tableRow.children[i].appendChild(input);
+    }
+
+    tableRow.children[5].innerHTML = "";
+    let butEdit = document.createElement("button");
+    butEdit.classList.add("confirm-edit");
+    tableRow.children[5].appendChild(butEdit);
+    butEdit.addEventListener("click", function(){
+        makeChanges(code, tableRow);
+    });
+}
+
+function makeChanges(code, tableRow){
+    const url = "../restservices/countries/"+code;
+    let formdata = new FormData();
+    formdata.append("name", tableRow.children[0].firstElementChild.value);
+    formdata.append("capital", tableRow.children[1].firstElementChild.value);
+    formdata.append("region", tableRow.children[2].firstElementChild.value);
+    formdata.append("surface", tableRow.children[3].firstElementChild.value);
+    formdata.append("population", tableRow.children[4].firstElementChild.value);
+    
+    const data = new URLSearchParams();
+    for (const pair of formdata) {
+        data.append(pair[0], pair[1]);
+    }
+    
+    fetch(url, {method: "PUT", body: data})
+    .then(function(response){
+        if(response.ok){
+            console.log("Country changed");
+            fixTableRow(tableRow, data, code);
+        }else{
+            console.error(response.json().error);
+        }
+    });
+}
+
+function fixTableRow(tableRow, data, code){
+    for(let i = 0; i < 5; i++){
+        tableRow.children[i].innerHTML="";
+    }
+    tableRow.children[0].appendChild(document.createTextNode(data.get("name")));
+    tableRow.children[1].appendChild(document.createTextNode(data.get("capital")));
+    tableRow.children[2].appendChild(document.createTextNode(data.get("region")));
+    tableRow.children[3].appendChild(document.createTextNode(data.get("surface")));
+    tableRow.children[4].appendChild(document.createTextNode(data.get("population")));
+    tableRow.children[5].innerHTML = "";
+    let butEdit = document.createElement("button");
+    butEdit.addEventListener("click", function(e){
+        makeRowEditable(code, tableRow);
+    });
+    butEdit.classList.add("edit");
+    tableRow.children[5].appendChild(butEdit);
+}
+
+function addNewSpawner(e){
+	document.querySelector("#newCountry").classList.remove("hidden");
+}
+
+function hideNewSpawner(e){
+	document.querySelector("#newCountry").classList.add("hidden");
+}
+
+function addNewCountry(){
+	const form = document.querySelector("#newCountryForm");
+	const formData = new FormData(form);
+
+	const data = new URLSearchParams();
+	for (const pair of formData) {
+	    data.append(pair[0], pair[1]);
+	}
+	
+	const url = "../restservices/countries";
+	fetch(url, {method: "post", body: data})
+	.then((res) => {
+        if (res.status === 400) {
+            throw new Error('Bad request');
+        }else if(res.status === 404){
+        	console.log('Internal server error');
+        }else if(res.ok){
+        	console.log("added country");
+        }
+        return res.json();
+    })
+    .then(json => {
+        console.log(json);
+    })
+    .catch(ex => {
+    	console.error(ex, ex.stack);
+    });
 }

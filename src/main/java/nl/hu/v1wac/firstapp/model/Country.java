@@ -70,4 +70,21 @@ public class Country {
 	public double getLongitude() {
 		return longitude;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Country code: ").append(this.code).append("\n");
+		sb.append("Iso3: ").append(this.iso3).append("\n");
+		sb.append("Name: ").append(this.name).append("\n");
+		sb.append("Capital: ").append(this.capital).append("\n");
+		sb.append("Continent: ").append(this.continent).append("\n");
+		sb.append("Region: ").append(this.region).append("\n");
+		sb.append("Surface: ").append(this.surface).append("\n");
+		sb.append("Population: ").append(this.population).append("\n");
+		sb.append("Government: ").append(this.government).append("\n");
+		sb.append("Latitude: ").append(this.latitude).append("\n");
+		sb.append("Longitude: ").append(this.longitude).append("\n");
+		return sb.toString();
+	}
 }

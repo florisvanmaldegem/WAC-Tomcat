@@ -1,0 +1,142 @@
+body{
+    margin: 0;
+    padding: 0;
+
+    background-color: #ffdac3;
+    font-family: sans-serif;
+    
+    z-index: 1;
+}
+
+/* PANELS */
+.infoPanel{
+    margin: 8px;
+}
+
+.infoHeader {
+    background-color: #f08a4b;
+    padding: 1px;
+    padding-left: 7px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.infoHeader > h1 {
+    color: white;
+}
+
+/* ------------------------------ */
+
+/* KEY VALUE PAIRS */
+.pair{
+    margin: 0px 5px;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 4px;
+    grid-template-columns: 150px auto;
+    max-width: 500px;
+}
+
+.pair > p{
+    margin: 0;
+    padding: 0;
+}
+.pair > .key {
+    display: inline-grid;
+    font-weight: bold;
+}
+
+.pair > .value {
+    display: inline-grid;
+}
+
+/* ------------------------------ */
+
+/* TABLE */
+table{
+    margin: 0;
+    padding: 0;
+}
+
+th{
+    text-align: left;
+    padding: 0 10px;
+}
+
+td {
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+tr:hover > td{
+    color: rgb(150, 143, 143);
+}
+
+/* ------------------------------ */
+
+/* Edit and remove buttons */
+
+button.edit {
+    height: 30px;
+    width: 30px;
+    background-image: url("../image/edit.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: none;
+    cursor: pointer;
+}
+
+button.remove{
+    height: 30px;
+    width: 30px;
+    background-image: url("../image/remove.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: none;
+    cursor: pointer;
+}
+
+button.confirm-edit{
+    height: 30px;
+    width: 30px;
+    background-image: url("../image/check.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: none;
+    cursor: pointer;
+}
+
+/* ------------------------------ */
+
+/* Adding a new country frame */
+#newCountry{
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	z-index: 2;
+	margin: auto auto;
+	background-color: white;
+	border-radius: 2em;
+	padding: 2em;
+}
+
+#newCountry.hidden{
+	display: none;
+}
+
+#newCountry > .toolbar {
+	display: flex;
+	justify-content: space-between;
+	
+}
+
+#newCountry > form {
+	width: 100%;
+}
+#newCountry > form > .inputGroup {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}

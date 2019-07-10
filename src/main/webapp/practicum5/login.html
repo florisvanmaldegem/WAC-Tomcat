@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form id="login">
+<label>Username</label>
+<input name="name" id="name">
+<label>Password</label>
+<input type="password" name="pass" id="pass">
+<input type="submit" value="login"/>
+</form>
+<script>
+window.addEventListener("load", function(){init()});
+
+function init(){
+	document.querySelector("#login").addEventListener("submit", function(e){
+		e.preventDefault();
+		login();
+	})
+}
+
+function login(){
+	const form = new FormData(document.querySelector("#login"));
+	
+	const formData = new URLSearchParams(form);
+	
+	const url = "../restservices/authentication/";
+	fetch(url, {method: "post", body: formData})
+	.then((res) => {
+        if (res.status === 400) {
+            throw new Error('Bad request');
+        }else if(res.status === 404){
+        	console.log('Internal server error');
+        }else if(res.ok){
+        	console.log("added country");
+        }else if(res.status === 401){
+        	throw new Error('Wrong username/password');
+        }
+        return res.json();
+    }).then(data => {
+    	window.sessionStorage.setItem("token", data.JWT);
+    	window.location.replace("./index.html");
+    }).catch(error => console.log(error));
+}
+</script>
+</body>
+</html>

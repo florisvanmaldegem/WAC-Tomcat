@@ -26,4 +26,15 @@ public class WorldService {
 	public Country getCountryByCode(String code) {
 		return countryDaoImpl.findByCode(code);
 	}
+	public boolean deleteCountry(Country country) {
+		return countryDaoImpl.delete(country);
+	}
+	
+	public boolean updateCountry(Country country) {
+		return countryDaoImpl.update(country);
+	}
+	
+	public boolean saveCountry(Country country) {
+		return countryDaoImpl.save(country);
+	}
 }
