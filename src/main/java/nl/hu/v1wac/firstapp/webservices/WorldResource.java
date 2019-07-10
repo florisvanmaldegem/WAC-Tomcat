@@ -56,6 +56,7 @@ public class WorldResource {
 	}
 	
 	@POST
+	@RolesAllowed("user")
 	@Produces("application/json")
 	public Response postCountry(
 			@FormParam("name") String name,
@@ -88,7 +89,7 @@ public class WorldResource {
 	}
 	
 	@PUT
-//	@RolesAllowed("user")
+	@RolesAllowed("user")
 	@Path("{id}")
 	@Produces("application/json")
 	public Response putCountry(@PathParam("id") String id,
